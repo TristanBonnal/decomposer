@@ -7,6 +7,23 @@ var app = {
 
     // Event listeners - TODO
   },
+  drawBoard: () => {
+    const boardElement = document.getElementById('board');
+    const rows = 4;
+    const columns = 6;
+
+    for (let i = 1; i <= rows; i++) {
+        cellRowElement = document.createElement('div');
+        cellRowElement.classList.add('cellRow');
+        cellRowElement.id = 'row' + i;
+        for (j = 1; j <= columns; j++) {
+            cellElement = document.createElement('div');
+            cellElement.classList.add('cell');
+            cellRowElement.append(cellElement);
+        }
+        boardElement.append(cellRowElement);
+    }
+  },
   handleLaunchScriptButton: function() {
     // TODO
     
