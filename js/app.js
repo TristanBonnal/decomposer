@@ -5,7 +5,7 @@ var app = {
         // TODO
         app.drawBoard();
 
-        // Event listeners - TODO
+        document.addEventListener('keydown', app.handleKeydown)
     },
 
     drawBoard: () => {
@@ -36,10 +36,55 @@ var app = {
         lastCellElement.classList.add('cellEnd');
 
         //Définition position de départ du curseur
-        firstCellElement.classList.add('cellCurrent');
+        firstCellElement.classList.add('cellCurrent', 'cellCurrent-right');
 
 
     },
+
+    moveForward: () => {
+        const currentCellCursor = document.querySelector('.cellCurrent');
+        const currentRow = currentCellCursor.closest('.cellRow');
+        let newCellCursor = null;
+
+        //Mouvement en avant si le curseur est orienté vers la droite
+        if (currentCellCursor.classList.contains('cellCurrent-right')) {
+            newCellCursor = currentCellCursor.nextSibling;
+        }
+
+
+        //Actualisation position curseur
+        currentCellCursor.classList.remove('cellCurrent', 'cellCurrent-right');
+        newCellCursor.classList.add('cellCurrent', 'cellCurrent-right');
+        console.log(newCellCursor);
+    },
+
+    turnRight: () => {
+        const currentCellCursor = document.querySelector('.cellCurrent');
+
+        if (currentCellCursor.classList.contains('cellCurrent-right')) {
+            currentCellCursor.classList.replace('cellCurrent-right', 'cellCurrent-bottom');
+        }
+        // if (currentCellCursor.classList.contains('cellCurrent-bottom')) {
+        //     currentCellCursor.classList.replace('cellCurrent-bottom', 'cellCurrent-left');
+        // }
+        // if (currentCellCursor.classList.contains('cellCurrent-left')) {
+        //     currentCellCursor.classList.replace('cellCurrent-left', 'cellCurrent-top');
+        // }
+        // if (currentCellCursor.classList.contains('cellCurrent-top')) {
+        //     currentCellCursor.classList.replace('cellCurrent-top', 'cellCurrent-right');
+        // }
+    },
+
+    handleKeydown: (e) => {
+        console.log(e.code);
+        if (e.code == 'ArrowUp') {
+            app.moveForward();
+        }
+        if (e.code == 'ArrowRight') {
+            app.turnRight();
+        }
+    },
+
     handleLaunchScriptButton: function() {
         // TODO
         
