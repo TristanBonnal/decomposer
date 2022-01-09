@@ -63,16 +63,13 @@ var app = {
 
         if (currentCellCursor.classList.contains('cellCurrent-right')) {
             currentCellCursor.classList.replace('cellCurrent-right', 'cellCurrent-bottom');
+        } else if (currentCellCursor.classList.contains('cellCurrent-bottom')) {
+            currentCellCursor.classList.replace('cellCurrent-bottom', 'cellCurrent-left');
+        } else if (currentCellCursor.classList.contains('cellCurrent-left')) {
+            currentCellCursor.classList.replace('cellCurrent-left', 'cellCurrent-top');
+        } else if (currentCellCursor.classList.contains('cellCurrent-top')) {
+            currentCellCursor.classList.replace('cellCurrent-top', 'cellCurrent-right');
         }
-        // if (currentCellCursor.classList.contains('cellCurrent-bottom')) {
-        //     currentCellCursor.classList.replace('cellCurrent-bottom', 'cellCurrent-left');
-        // }
-        // if (currentCellCursor.classList.contains('cellCurrent-left')) {
-        //     currentCellCursor.classList.replace('cellCurrent-left', 'cellCurrent-top');
-        // }
-        // if (currentCellCursor.classList.contains('cellCurrent-top')) {
-        //     currentCellCursor.classList.replace('cellCurrent-top', 'cellCurrent-right');
-        // }
     },
 
     handleKeydown: (e) => {
