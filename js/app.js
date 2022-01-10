@@ -1,28 +1,29 @@
-var app = {
-    //Position de départ
-    rowPosition: 1,
-    columnPosition: 0,
+const app = {
+    // Dimensions grille
+    rowsNb: 4,
+    columnsNb:6,
+
+    //Position de départ aléatoire
+    rowPosition: utils.getRandomNumber(1, app.rowsNb),
+    columnPosition: utils.getRandomNumber(0, app.columnsNb - 1),
 
     init: function() {
         console.log('init');
-
-        // TODO
         app.drawBoard();
 
-        document.addEventListener('keydown', app.handleKeydown)
+        document.addEventListener('keydown', app.handleKeydown);
+        document.getElementById('launchScript').addEventListener('click', app.handleLaunchScriptButton)
     },
 
     drawBoard: () => {
         const boardElement = document.getElementById('board');
-        const rowsNb = 4;
-        const columnsNb = 6;
 
         //Définition de la grille
-        for (let i = 1; i <= rowsNb; i++) {
+        for (let i = 1; i <= app.rowsNb; i++) {
             cellRowElement = document.createElement('div');
             cellRowElement.classList.add('cellRow');
             cellRowElement.id = 'row' + i;
-            for (j = 1; j <= columnsNb; j++) {
+            for (j = 1; j <= app.columnsNb; j++) {
                 cellElement = document.createElement('div');
                 cellElement.classList.add('cell');
                 cellRowElement.append(cellElement);
@@ -31,11 +32,11 @@ var app = {
         }
 
         //Définition cellule de départ et cellule d'arrivée
-        const firstRowElement = document.getElementById('row1');
-        const firstCellElement = firstRowElement.firstChild;
+        const firstRowElement = document.getElementById('row' + app.rowPosition);
+        const firstCellElement = firstRowElement.childNodes.item(app.columnPosition);
         firstCellElement.classList.add('cellStart');
 
-        const lastRowElement = document.getElementById('row' + rowsNb);
+        const lastRowElement = document.getElementById('row' + app.rowsNb);
         const lastCellElement = lastRowElement.lastChild;
         lastCellElement.classList.add('cellEnd');
 
@@ -119,37 +120,66 @@ var app = {
     },
 
     handleLaunchScriptButton: function() {
-        // TODO
-        
-        // TODO : get all lines as an array
+        const textContent = document.getElementById('userCode').value;
 
-        window.setTimeout(function() {
-        app.codeLineLoop(codeLines, 0);
-        }, 2000);
+        let codeLines = textContent.split('\n');
+        console.log(codeLines);
+
+
+        window.setTimeout(
+            function() {
+                app.codeLineLoop(codeLines, 0);
+            }, 
+            2000);
     },
+    
     codeLineLoop: function(codeLines, index) {
-        // Getting currentLine
-        var currentLine = codeLines[index];
+
+        let currentLine = codeLines[index];
+
         console.log(currentLine);
+        if (currentLine == 'turn left') {
+            app.turnLeft();
+        } else if (currentLine == 'turn right') {
+            app.turnRight();
+        } else if (currentLine == 'move forward') {
+            app.moveForward();
+        } else {
+            console.log('erreur script');
+            alert('Erreurs dans le script :(\nLa ligne suivante n\' est pas reconnue : \n' + currentLine );
+            // return;
+        }
 
-
-        // Increment
         index++;
 
-        // if still a line to interpret
         if (index < codeLines.length) {
-        // Recall same method (=> make a loop)
-        window.setTimeout(function() {
-            app.codeLineLoop(codeLines, index);
-        }, 1000);
+            window.setTimeout(
+                function() {
+                    app.codeLineLoop(codeLines, index);
+                },
+                1000
+            );
         } else {
-        window.setTimeout(function() {
-            app.checkSuccess();
-        }, 1000);
+            window.setTimeout(
+                function() {
+                    app.checkSuccess();
+                },
+                1000
+            );
         }
     },
     checkSuccess: function() {
-        // TODO display if the game is won or not
+        const endCell = document.querySelector('.cellEnd');
+
+        if (endCell.classList.contains('cellCurrent')) {
+            alert('Gagné ! :)');
+        } else {
+            alert('Perdu ! :(');
+        }
+    },
+    getRandomNumber: (min, max) => {
+        let randomNumber =  Math.random() * (max - min) + min;
+        return Math.round(randomNumber);
     }
 };
 
