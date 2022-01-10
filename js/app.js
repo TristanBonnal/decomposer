@@ -1,4 +1,8 @@
 var app = {
+    //Position de départ
+    rowPosition: 1,
+    columnPosition: 0,
+
     init: function() {
         console.log('init');
 
@@ -42,20 +46,36 @@ var app = {
     },
 
     moveForward: () => {
+        //Récupération de la cellule contenant le curseur
         const currentCellCursor = document.querySelector('.cellCurrent');
-        const currentRow = currentCellCursor.closest('.cellRow');
-        let newCellCursor = null;
-
-        //Mouvement en avant si le curseur est orienté vers la droite
+        
+        //Mouvement en avant en fonction de la direction du curseur
         if (currentCellCursor.classList.contains('cellCurrent-right')) {
-            newCellCursor = currentCellCursor.nextSibling;
+            app.columnPosition++;
+            direction = 'cellCurrent-right';
+        } else if (currentCellCursor.classList.contains('cellCurrent-bottom')) {
+            app.rowPosition++;
+            direction = 'cellCurrent-bottom';
+        } else if (currentCellCursor.classList.contains('cellCurrent-left')) {
+            app.columnPosition--;
+            direction = 'cellCurrent-left';
+        } else if (currentCellCursor.classList.contains('cellCurrent-top')) {
+            app.rowPosition--;
+            direction = 'cellCurrent-top';
         }
-
-
+        
+        //Empêche de sortir de la grille en respectant les coordonnées mini et maxi
+        if (app.rowPosition < 1) app.rowPosition = 1;
+        if (app.rowPosition > 4) app.rowPosition = 4;
+        if (app.columnPosition < 0) app.columnPosition = 0;
+        if (app.columnPosition > 5) app.columnPosition = 5;
+        
         //Actualisation position curseur
-        currentCellCursor.classList.remove('cellCurrent', 'cellCurrent-right');
-        newCellCursor.classList.add('cellCurrent', 'cellCurrent-right');
-        console.log(newCellCursor);
+        let newRow = document.getElementById('row' + app.rowPosition)
+        let newCellCursor = newRow.childNodes.item(app.columnPosition);
+
+        currentCellCursor.classList.remove('cellCurrent', direction);
+        newCellCursor.classList.add('cellCurrent', direction);
     },
 
     turnRight: () => {
@@ -72,13 +92,29 @@ var app = {
         }
     },
 
+    turnLeft: () => {
+        const currentCellCursor = document.querySelector('.cellCurrent');
+
+        if (currentCellCursor.classList.contains('cellCurrent-right')) {
+            currentCellCursor.classList.replace('cellCurrent-right', 'cellCurrent-top');
+        } else if (currentCellCursor.classList.contains('cellCurrent-bottom')) {
+            currentCellCursor.classList.replace('cellCurrent-bottom', 'cellCurrent-right');
+        } else if (currentCellCursor.classList.contains('cellCurrent-left')) {
+            currentCellCursor.classList.replace('cellCurrent-left', 'cellCurrent-bottom');
+        } else if (currentCellCursor.classList.contains('cellCurrent-top')) {
+            currentCellCursor.classList.replace('cellCurrent-top', 'cellCurrent-left');
+        }
+    },
+
     handleKeydown: (e) => {
-        console.log(e.code);
         if (e.code == 'ArrowUp') {
             app.moveForward();
         }
         if (e.code == 'ArrowRight') {
             app.turnRight();
+        }
+        if (e.code == 'ArrowLeft') {
+            app.turnLeft();
         }
     },
 
