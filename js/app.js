@@ -2,8 +2,24 @@ const app = {
     // Dimensions grille
     rowsNb: 4,
     columnsNb: 6,
+    
+    init: function() {
+        //Positions de départ et d'arivée
+        app.positions = app.getRowAndColumnPosition();
 
-    //Positions de départ et d'arivée aléatoire
+        //Position actuelle
+        app.currentRow = app.positions.rowStart;
+        app.currentColumn = app.positions.columnStart;
+        
+        //Définition de la grille
+        app.drawBoard();
+
+        //Listeners pour les scripts de jeu
+        document.addEventListener('keydown', app.handleKeydown);
+        document.getElementById('launchScript').addEventListener('click', app.handleLaunchScriptButton);
+    },
+
+    //Methode renvoyant un objet qui contient les positions de départ et d'arrivée aléatoirement
     getRowAndColumnPosition: () => {
         //Départ
         let rowStartPosition = utils.getRandomNumber(1, app.rowsNb);
@@ -25,13 +41,7 @@ const app = {
             'columnEnd': columnEndPosition
         };
     },
-
-    init: function() {
-        app.drawBoard();
-        document.addEventListener('keydown', app.handleKeydown);
-        document.getElementById('launchScript').addEventListener('click', app.handleLaunchScriptButton);
-    },
-
+    
     drawBoard: () => {
         const boardElement = document.getElementById('board');
 
@@ -50,12 +60,12 @@ const app = {
 
         //Définition cellule de départ et cellule d'arrivée
         const positions = app.getRowAndColumnPosition();
-        const firstRowElement = document.getElementById('row' + positions.rowStart);
-        const firstCellElement = firstRowElement.childNodes.item(positions.columnStart);
+        const firstRowElement = document.getElementById('row' + app.positions.rowStart);
+        const firstCellElement = firstRowElement.childNodes.item(app.positions.columnStart);
         firstCellElement.classList.add('cellStart');
 
-        const lastRowElement = document.getElementById('row' + positions.rowEnd);
-        const lastCellElement = lastRowElement.childNodes.item(positions.columnEnd);
+        const lastRowElement = document.getElementById('row' + app.positions.rowEnd);
+        const lastCellElement = lastRowElement.childNodes.item(app.positions.columnEnd);
         lastCellElement.classList.add('cellEnd');
 
         //Définition position de départ du curseur
@@ -70,28 +80,28 @@ const app = {
         
         //Mouvement en avant en fonction de la direction du curseur
         if (currentCellCursor.classList.contains('cellCurrent-right')) {
-            app.columnPosition++;
+            app.currentColumn++;
             direction = 'cellCurrent-right';
         } else if (currentCellCursor.classList.contains('cellCurrent-bottom')) {
-            app.rowPosition++;
+            app.currentRow++;
             direction = 'cellCurrent-bottom';
         } else if (currentCellCursor.classList.contains('cellCurrent-left')) {
-            app.columnPosition--;
+            app.currentColumn--;
             direction = 'cellCurrent-left';
         } else if (currentCellCursor.classList.contains('cellCurrent-top')) {
-            app.rowPosition--;
+            app.currentRow--;
             direction = 'cellCurrent-top';
         }
         
         //Empêche de sortir de la grille en respectant les coordonnées mini et maxi
-        if (app.rowPosition < 1) app.rowPosition = 1;
-        if (app.rowPosition > 4) app.rowPosition = 4;
-        if (app.columnPosition < 0) app.columnPosition = 0;
-        if (app.columnPosition > 5) app.columnPosition = 5;
+        if (app.currentRow < 1) app.currentRow = 1;
+        if (app.currentRow > app.rowsNb) app.currentRow = app.rowsNb;
+        if (app.currentColumn < 0) app.currentColumn = 0;
+        if (app.currentColumn > app.columnsNb -1) app.currentColumn = app.columnsNb -1;
         
         //Actualisation position curseur
-        let newRow = document.getElementById('row' + app.rowPosition)
-        let newCellCursor = newRow.childNodes.item(app.columnPosition);
+        let newRow = document.getElementById('row' + app.currentRow)
+        let newCellCursor = newRow.childNodes.item(app.currentColumn);
 
         currentCellCursor.classList.remove('cellCurrent', direction);
         newCellCursor.classList.add('cellCurrent', direction);
@@ -162,10 +172,9 @@ const app = {
             app.turnRight();
         } else if (currentLine == 'move forward') {
             app.moveForward();
-        } else {
+        } else if (currentLine.trim() != '') {
             console.log('erreur script');
             alert('Erreurs dans le script :(\nLa ligne suivante n\' est pas reconnue : \n' + currentLine );
-            // return;
         }
 
         index++;
@@ -194,10 +203,6 @@ const app = {
         } else {
             alert('Perdu ! :(');
         }
-    },
-    getRandomNumber: (min, max) => {
-        let randomNumber =  Math.random() * (max - min) + min;
-        return Math.round(randomNumber);
     }
 };
 
