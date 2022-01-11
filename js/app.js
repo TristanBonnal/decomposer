@@ -1,18 +1,35 @@
 const app = {
     // Dimensions grille
     rowsNb: 4,
-    columnsNb:6,
+    columnsNb: 6,
 
-    //Position de départ aléatoire
-    rowPosition: utils.getRandomNumber(1, app.rowsNb),
-    columnPosition: utils.getRandomNumber(0, app.columnsNb - 1),
+    //Positions de départ et d'arivée aléatoire
+    getRowAndColumnPosition: () => {
+        //Départ
+        let rowStartPosition = utils.getRandomNumber(1, app.rowsNb);
+        let columnStartPosition = utils.getRandomNumber(0, app.columnsNb - 1);
+    
+        //Arrivée
+        do {
+            rowEndPosition = utils.getRandomNumber(1, app.rowsNb);
+        } while (rowEndPosition == rowStartPosition);
+
+        do {
+            columnEndPosition = utils.getRandomNumber(0, app.columnsNb - 1);
+        } while (columnEndPosition == columnStartPosition);
+
+        return {
+            'rowStart': rowStartPosition,
+            'columnStart': columnStartPosition,
+            'rowEnd': rowEndPosition,
+            'columnEnd': columnEndPosition
+        };
+    },
 
     init: function() {
-        console.log('init');
         app.drawBoard();
-
         document.addEventListener('keydown', app.handleKeydown);
-        document.getElementById('launchScript').addEventListener('click', app.handleLaunchScriptButton)
+        document.getElementById('launchScript').addEventListener('click', app.handleLaunchScriptButton);
     },
 
     drawBoard: () => {
@@ -32,12 +49,13 @@ const app = {
         }
 
         //Définition cellule de départ et cellule d'arrivée
-        const firstRowElement = document.getElementById('row' + app.rowPosition);
-        const firstCellElement = firstRowElement.childNodes.item(app.columnPosition);
+        const positions = app.getRowAndColumnPosition();
+        const firstRowElement = document.getElementById('row' + positions.rowStart);
+        const firstCellElement = firstRowElement.childNodes.item(positions.columnStart);
         firstCellElement.classList.add('cellStart');
 
-        const lastRowElement = document.getElementById('row' + app.rowsNb);
-        const lastCellElement = lastRowElement.lastChild;
+        const lastRowElement = document.getElementById('row' + positions.rowEnd);
+        const lastCellElement = lastRowElement.childNodes.item(positions.columnEnd);
         lastCellElement.classList.add('cellEnd');
 
         //Définition position de départ du curseur
