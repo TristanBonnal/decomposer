@@ -174,7 +174,7 @@ const app = {
             app.moveForward();
         } else if (currentLine.trim() != '') {
             console.log('erreur script');
-            alert('Erreurs dans le script :(\nLa ligne suivante n\' est pas reconnue : \n' + currentLine );
+            alert('Erreurs dans le script :(\nLa ligne suivante n\' est pas reconnue : \n' + currentLine);
         }
 
         index++;
