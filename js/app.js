@@ -59,7 +59,6 @@ const app = {
         }
 
         //Définition cellule de départ et cellule d'arrivée
-        const positions = app.getRowAndColumnPosition();
         const firstRowElement = document.getElementById('row' + app.positions.rowStart);
         const firstCellElement = firstRowElement.childNodes.item(app.positions.columnStart);
         firstCellElement.classList.add('cellStart');
@@ -107,6 +106,7 @@ const app = {
         newCellCursor.classList.add('cellCurrent', direction);
     },
 
+    // Rotation du curseur au moyen de la classe css définie
     turnRight: () => {
         const currentCellCursor = document.querySelector('.cellCurrent');
 
@@ -135,6 +135,7 @@ const app = {
         }
     },
 
+    // Mouvements du curseurs au clavier
     handleKeydown: (e) => {
         if (e.code == 'ArrowUp') {
             app.moveForward();
@@ -147,22 +148,21 @@ const app = {
         }
     },
 
+    // Lancement du script coté utilisateur
     handleLaunchScriptButton: function() {
         const textContent = document.getElementById('userCode').value;
-
         let codeLines = textContent.split('\n');
         console.log(codeLines);
-
 
         window.setTimeout(
             function() {
                 app.codeLineLoop(codeLines, 0);
             }, 
-            2000);
+            1000);
     },
     
+    // Boucle lisant chaque ligne du script utilisateur
     codeLineLoop: function(codeLines, index) {
-
         let currentLine = codeLines[index];
 
         console.log(currentLine);
@@ -187,6 +187,7 @@ const app = {
                 1000
             );
         } else {
+            // Une fois arrivé à la dernière ligne, vérification de la position du curseur pour affichage victoire ou défaite
             window.setTimeout(
                 function() {
                     app.checkSuccess();
@@ -195,6 +196,8 @@ const app = {
             );
         }
     },
+
+    // Vérification de la position du curseur par rapport à la cellule verte
     checkSuccess: function() {
         const endCell = document.querySelector('.cellEnd');
 

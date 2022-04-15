@@ -1,7 +1,7 @@
-# Decomposer 🤖
+# Decomposer :robot:
 
 ## The website :computer:
-
+This mini project had for purpose to work on algorythmics with eventListeners, random numbers, timeout functions... This site is still in progress, there are many ways to improve it.
 
 Working features: 
 - EventListener on keydown
